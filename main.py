@@ -1,11 +1,17 @@
 import time
 import os
 import shutil
+import datetime
+from datetime import date
+
 
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 
 from moviepy.editor import *
+
+from Google import Create_Service
+from googleapiclient.http import MediaFileUpload
 
 def download():
     driver = webdriver.Chrome()
@@ -18,7 +24,7 @@ def download():
     daily.click()
     time.sleep(1)
     links = []
-    for i in range(14):
+    for i in range(10):
         titles = driver.find_elements(By.CLASS_NAME, "description__info")
         for title in titles:
             a = title.find_element(By.TAG_NAME , "a")
@@ -47,13 +53,50 @@ def move():
             shutil.move(source + f, destination + f)
             
 def merge():
-    source = 'C:/mememixBot/videos/'
-    videos = os.listdir(source)
+    videoFolder = 'C:/mememixBot/videos/'
+    videos = os.listdir(videoFolder)
     clips = []
     for video in videos:
         clips.append(VideoFileClip("C:/mememixBot/videos/" + video))
-    final = concatenate_videoclips(clips)
+    final = concatenate_videoclips(clips, method='compose')
     final.write_videofile("result.mp4")
     for video in videos:
         os.remove("C:/mememixBot/videos/" + video)
     
+def upload():
+    CLIENT_SECRET_FILE = 'client_secret.json'
+    API_NAME = 'youtube'
+    API_VERSION = 'v3'
+    SCOPES = ['https://www.googleapis.com/auth/youtube.upload']
+
+    service = Create_Service(CLIENT_SECRET_FILE, API_NAME, API_VERSION, SCOPES)
+
+    upload_date_time = datetime.datetime(date.today().year, date.today().month, date.today().day, 14, 0, 0).isoformat() + '.000Z'
+
+    request_body = {
+        'snippet': {
+            'categoryI': 24,
+            'title': 'Daily Dose',
+            'description': 'Thanks for watching',
+            'tags': ['meme', 'daily', 'coub', 'coubs']
+        },
+        'status': {
+            'privacyStatus': 'private',
+            'publishAt': upload_date_time,
+            'selfDeclaredMadeForKids': False, 
+        },
+        'notifySubscribers': False
+    }
+
+    mediaFile = MediaFileUpload('result.MP4')
+
+    response_upload = service.videos().insert(
+        part='snippet,status',
+        body=request_body,
+        media_body=mediaFile
+    ).execute()
+    
+# download()
+# move()
+# merge()
+upload()
