@@ -1,9 +1,11 @@
-import selenium
-from selenium import webdriver
-from selenium.webdriver.common.by import By
 import time
 import os
 import shutil
+
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+
+from moviepy.editor import *
 
 def download():
     driver = webdriver.Chrome()
@@ -44,3 +46,14 @@ def move():
         if f.endswith('.mp4'):
             shutil.move(source + f, destination + f)
             
+def merge():
+    source = 'C:/mememixBot/videos/'
+    videos = os.listdir(source)
+    clips = []
+    for video in videos:
+        clips.append(VideoFileClip("C:/mememixBot/videos/" + video))
+    final = concatenate_videoclips(clips)
+    final.write_videofile("result.mp4")
+    for video in videos:
+        os.remove("C:/mememixBot/videos/" + video)
+    
