@@ -73,12 +73,15 @@ def upload():
 
     upload_date_time = datetime.datetime(date.today().year, date.today().month, date.today().day, 14, 0, 0).isoformat() + '.000Z'
 
+    with open('s.txt') as f:
+        s = f.read()
+
     request_body = {
         'snippet': {
             'categoryI': 24,
-            'title': 'Daily Dose',
-            'description': 'Thanks for watching',
-            'tags': ['meme', 'daily', 'coub', 'coubs']
+            'title': 'Daily Dose #{}'.format(s),
+            'description': 'Thanks for watching :)',
+            'tags': ['meme', 'daily', 'coub', 'coubs', 'funny', 'trend', 'memes', 'compilation']
         },
         'status': {
             'privacyStatus': 'private',
@@ -96,7 +99,15 @@ def upload():
         media_body=mediaFile
     ).execute()
     
-# download()
-# move()
-# merge()
-upload()
+    s = int(s) + 1
+    s = str(s)
+    f = open("s.txt", "w")
+    f.write(s)
+    f.close()
+    
+while True:
+    download()
+    move()
+    merge()
+    upload()
+    time.sleep(86400)
