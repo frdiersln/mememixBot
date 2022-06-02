@@ -26,7 +26,7 @@ def download():
     daily.click()
     time.sleep(1)
     links = []
-    for i in range(10):
+    for i in range(8):
         titles = driver.find_elements(By.CLASS_NAME, "description__info")
         for title in titles:
             a = title.find_element(By.TAG_NAME , "a")
@@ -43,6 +43,12 @@ def download():
         download = driver.find_element(By.CLASS_NAME, "coub__download")
         download.click()
 
+    del(driver)
+    del(url)
+    del(dropdown)
+    del(daily)
+    del(links) #clear ram
+
 def move():
     winUserName = "frdie"
     source = 'C:/Users/{}/Downloads/'.format(winUserName)
@@ -53,17 +59,73 @@ def move():
     for f in allfiles:
         if f.endswith('.mp4'):
             shutil.move(source + f, destination + f)
+
+    del(winUserName)
+    del(source)
+    del(destination)
+    del(allfiles) #clear ram
             
 def merge():
     videoFolder = 'C:/mememixBot/videos/'
     videos = os.listdir(videoFolder)
-    clips = []
-    for video in videos:
-        clips.append(VideoFileClip("C:/mememixBot/videos/" + video))
-    final = concatenate_videoclips(clips, method='compose')
+
+    clips1 = []
+    clips2 = []
+    clips3 = []
+    clips4 = []
+
+    quarterOfVid = len(videos) / 4
+
+    for video in videos[:int(quarterOfVid)]:  
+        clips1.append(VideoFileClip("C:/mememixBot/videos/" + video))
+    quarter1 = concatenate_videoclips(clips1, method='compose')
+    print("quarter1 created")
+
+    for video in videos[int(quarterOfVid):(int(quarterOfVid)*2)]:
+        clips2.append(VideoFileClip("C:/mememixBot/videos/" + video))
+    quarter2 = concatenate_videoclips(clips2, method='compose')
+    print("quarter2 created")
+
+    half1 = concatenate_videoclips([quarter1, quarter2], method='compose')
+    half1.write_videofile("half1.mp4")
+    print("half1 created")
+
+    del(clips1)
+    del(clips2)
+    del(quarter1)
+    del(quarter2)
+    del(half1) #clear ram
+
+    for video in videos[(int(quarterOfVid)*2):(int(quarterOfVid)*3)]: 
+        clips3.append(VideoFileClip("C:/mememixBot/videos/" + video))
+    quarter3 = concatenate_videoclips(clips3, method='compose')
+    print("quarter3 created")
+
+    for video in videos[(int(quarterOfVid)*3):]: 
+        clips4.append(VideoFileClip("C:/mememixBot/videos/" + video))
+    quarter4 = concatenate_videoclips(clips4, method='compose')
+    print("quarter4 created")
+
+    half2 = concatenate_videoclips([quarter3, quarter4], method='compose')
+    print("half2 created")
+
+    del(clips3)
+    del(clips4)
+    del(quarter3)
+    del(quarter4) #clear ram
+
+    
+    final = concatenate_videoclips([VideoFileClip("C:/mememixBot/half1.mp4"), half2], method='compose')
     final.write_videofile("result.mp4")
+    print("final created")
+    
     for video in videos:
         os.remove("C:/mememixBot/videos/" + video)
+    print("videos deleted")
+
+    del(half2)
+    del(final)
+    del(videos) #clear ram
     
 def upload():
     CLIENT_SECRET_FILE = 'client_secret.json'
@@ -106,6 +168,18 @@ def upload():
     f = open("s.txt", "w")
     f.write(s)
     f.close()
+
+    del(CLIENT_SECRET_FILE)
+    del(API_NAME)
+    del(API_VERSION)
+    del(SCOPES)
+    del(service)
+    del(upload_date_time)
+    del(s)
+    del(request_body)
+    del(mediaFile)
+    del(response_upload) #clear ram
+
     
 while True:
     download()
@@ -114,4 +188,7 @@ while True:
     merge()
     print("merged \n uploading")
     upload()
-    time.sleep(86000)
+    for i in range(86000, 0, -1):
+        print("sleeping: " + str(i))
+        time.sleep(0.989)
+    
