@@ -7,6 +7,7 @@ from datetime import date
 
 from selenium import webdriver
 from selenium.webdriver.common.by import By
+from selenium.webdriver.chrome.options import Options
 
 from moviepy.editor import *
 
@@ -14,6 +15,7 @@ from Google import Create_Service
 from googleapiclient.http import MediaFileUpload
 
 def download():
+    
     driver = webdriver.Chrome()
     url = "https://coub.com/community/memes"
     driver.get(url)
@@ -79,7 +81,7 @@ def upload():
     request_body = {
         'snippet': {
             'categoryI': 24,
-            'title': 'Daily Dose #{}'.format(s),
+            'title': 'mememix compilation V{}'.format(s),
             'description': 'Thanks for watching :)',
             'tags': ['meme', 'daily', 'coub', 'coubs', 'funny', 'trend', 'memes', 'compilation']
         },
@@ -107,7 +109,9 @@ def upload():
     
 while True:
     download()
+    print("downloaded")
     move()
     merge()
+    print("merged \n uploading")
     upload()
-    time.sleep(86400)
+    time.sleep(86000)
