@@ -172,6 +172,13 @@ def upload():
     request_body = {
         'snippet': {
             'categoryI': 24,
+            'thumbnails': {
+                ('maxres'): {
+                    "url": "thumbnail.png",
+                    "width": 1280,
+                    "height": 720
+                }
+            },
             'title': 'mememix compilation V{}'.format(s),
             'description': 'Thanks for watching :)',
             'tags': ['meme', 'daily', 'coub', 'coubs', 'funny', 'trend', 'memes', 'compilation']
@@ -209,14 +216,15 @@ def upload():
     del(mediaFile)
     del(response_upload) #clear ram
 
-# while True:
-#     download()
-#     print("downloaded")
-#     move()
-#     merge()
-#     print("merged \n uploading")
-#     upload()
-#     createThumbnail()
-#     for i in range(86000, 0, -1):
-#         print("sleeping: " + str(i))
-#         time.sleep(0.989)
+while True:
+    if (datetime.datetime.now().strftime("%A") == "Friday" or datetime.datetime.now().strftime("%A") == "Monday" or datetime.datetime.now().strftime("%A") == "Wednesday"):
+        download()
+        print("downloaded")
+        move()
+        merge()
+        print("merged \n uploading")
+        createThumbnail()
+        upload()
+    for i in range(16, 0, -1):
+        print(str(i * 1.5) + " hours left for day check!")
+        time.sleep(5400)
