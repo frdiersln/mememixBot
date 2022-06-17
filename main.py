@@ -16,35 +16,36 @@ from googleapiclient.http import MediaFileUpload
 
 def download():
     
-    driver = webdriver.Chrome()
-    url = "https://coub.com/community/memes"
-    driver.get(url)
-
-    dropdown = driver.find_element(By.CLASS_NAME, "page-menu__period-selector")
-    dropdown.click()
-    daily = driver.find_element(By.CLASS_NAME, "daily")
-    daily.click()
-    time.sleep(1)
-    links = []
-    for i in range(8):
-        titles = driver.find_elements(By.CLASS_NAME, "description__info")
-        for title in titles:
-            a = title.find_element(By.TAG_NAME , "a")
-            link = a.get_attribute('href')
-            if link[17] == 'v':
-                if not link in links:
-                    links.append(link)
-        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+    driver = webdriver.Chrome() 
+    urls = ["https://coub.com/community/memes", "https://coub.com/community/animals-pets", "https://coub.com/community/sports", "https://coub.com/community/cars"]
+    
+    for url in urls:
+        driver.get(url)
+        dropdown = driver.find_element(By.CLASS_NAME, "page-menu__period-selector")
+        dropdown.click()
+        daily = driver.find_element(By.CLASS_NAME, "daily")
+        daily.click()
         time.sleep(1)
-        
-    for link in links:
-        driver.get(link)
-        time.sleep(0.26)
-        download = driver.find_element(By.CLASS_NAME, "coub__download")
-        download.click()
+        links = []
+        for i in range(2):
+            titles = driver.find_elements(By.CLASS_NAME, "description__info")
+            for title in titles:
+                a = title.find_element(By.TAG_NAME , "a")
+                link = a.get_attribute('href')
+                if link[17] == 'v':
+                    if not link in links:
+                        links.append(link)
+            driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+            time.sleep(1)
+            
+        for link in links:
+            driver.get(link)
+            time.sleep(0.26)
+            download = driver.find_element(By.CLASS_NAME, "coub__download")
+            download.click()
 
     del(driver)
-    del(url)
+    del(urls)
     del(dropdown)
     del(daily)
     del(links) #clear ram
@@ -56,10 +57,24 @@ def move():
     
     allfiles = os.listdir(source)
     
+    u = open("uploaded.txt", "a+")
+    u.seek(0)
+    uploadedVideos = u.read().splitlines() 
+    
+    print(uploadedVideos)
     for f in allfiles:
         if f.endswith('.mp4'):
-            shutil.move(source + f, destination + f)
-
+            if (f in uploadedVideos):
+                os.remove(source + f)
+                print("Uploaded video deleted.")
+            else:
+                shutil.move(source + f, destination + f)
+                u.write(f + "\n")
+            
+    u.close()
+    
+    del(u)
+    del(uploadedVideos)
     del(winUserName)
     del(source)
     del(destination)
@@ -180,7 +195,6 @@ def upload():
     del(mediaFile)
     del(response_upload) #clear ram
 
-    
 while True:
     download()
     print("downloaded")
