@@ -222,8 +222,9 @@ while True:
         print("downloaded")
         move()
         merge()
-        print("merged \n uploading")
+        print("merged")
         createThumbnail()
+        print("thumbnail created \n video uploading")
         upload()
     for i in range(16, 0, -1):
         print(str(i * 1.5) + " hours left for day check!")
