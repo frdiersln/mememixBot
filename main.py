@@ -11,6 +11,10 @@ from selenium.webdriver.chrome.options import Options
 
 from moviepy.editor import *
 
+from PIL import Image
+from PIL import ImageDraw
+from PIL import ImageFont
+
 from Google import Create_Service
 from googleapiclient.http import MediaFileUpload
 
@@ -142,6 +146,16 @@ def merge():
     del(final)
     del(videos) #clear ram
     
+def createThumbnail():
+    img = Image.open('thumbnailBG.png')
+    myFont = ImageFont.truetype('BADABB__.ttf', 189)
+    with open('s.txt') as f:
+        s = f.read()
+        
+    I1 = ImageDraw.Draw(img)
+    I1.text((141, 89), "MEMEMIX \n  COMPILATION \n          #{}".format(s), font=myFont, fill =(255, 255, 255))
+    img.save("thumbnail.png")
+    
 def upload():
     CLIENT_SECRET_FILE = 'client_secret.json'
     API_NAME = 'youtube'
@@ -167,7 +181,7 @@ def upload():
             'publishAt': upload_date_time,
             'selfDeclaredMadeForKids': False, 
         },
-        'notifySubscribers': False
+        'notifySubscribers': True
     }
 
     mediaFile = MediaFileUpload('result.MP4')
@@ -195,14 +209,14 @@ def upload():
     del(mediaFile)
     del(response_upload) #clear ram
 
-while True:
-    download()
-    print("downloaded")
-    move()
-    merge()
-    print("merged \n uploading")
-    upload()
-    for i in range(86000, 0, -1):
-        print("sleeping: " + str(i))
-        time.sleep(0.989)
-    
+# while True:
+#     download()
+#     print("downloaded")
+#     move()
+#     merge()
+#     print("merged \n uploading")
+#     upload()
+#     createThumbnail()
+#     for i in range(86000, 0, -1):
+#         print("sleeping: " + str(i))
+#         time.sleep(0.989)
