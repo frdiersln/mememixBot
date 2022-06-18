@@ -55,7 +55,7 @@ def download():
     del(links) #clear ram
 
 def move():
-    winUserName = "frdie"
+    winUserName = "frdiersln"
     source = 'C:/Users/{}/Downloads/'.format(winUserName)
     destination = 'C:/mememixBot/videos/'
     
