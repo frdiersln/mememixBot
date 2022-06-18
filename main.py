@@ -216,16 +216,12 @@ def upload():
     del(mediaFile)
     del(response_upload) #clear ram
 
-while True:
-    if (datetime.datetime.now().strftime("%A") == "Friday" or datetime.datetime.now().strftime("%A") == "Monday" or datetime.datetime.now().strftime("%A") == "Wednesday"):
-        download()
-        print("downloaded")
-        move()
-        merge()
-        print("merged")
-        createThumbnail()
-        print("thumbnail created \n video uploading")
-        upload()
-    for i in range(16, 0, -1):
-        print(str(i * 1.5) + " hours left for day check!")
-        time.sleep(5400)
+if (datetime.datetime.now().strftime("%A") == "Friday" or datetime.datetime.now().strftime("%A") == "Monday" or datetime.datetime.now().strftime("%A") == "Wednesday"):
+    download()
+    print("downloaded")
+    move()
+    merge()
+    print("merged")
+    createThumbnail()
+    print("thumbnail created \n video uploading")
+    upload()
