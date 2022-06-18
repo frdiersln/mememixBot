@@ -225,3 +225,5 @@ if (datetime.datetime.now().strftime("%A") == "Friday" or datetime.datetime.now(
     createThumbnail()
     print("thumbnail created \n video uploading")
     upload()
+else:
+    print("not today")
